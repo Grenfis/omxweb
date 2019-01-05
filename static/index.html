@@ -3,149 +3,21 @@
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" />
-    <link href="/static/main.css" rel="stylesheet" />
-    <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.css" >
+    <script src="/static/js/jquery-3.2.1.slim.min.js" ></script>
+    <script src="/static/js/popper.min.js" ></script>
+    <script src="/static/js/bootstrap.js" ></script>
+    <script src="/static/js/vue.js" ></script>
+    
+    <link rel="stylesheet" href="/static/css/main.css" >
     <title>omxremote</title>
   </head>
   <body>
-    <div class="browse">
-      <ul></ul>
-    </div>
-
-    <div class="controls">
-      <div class="rewind">
-        <div class="button action backward-fast" data="seek_back_fast"><i class="fa fa-fast-backward"></i></div>
-        <div class="button action forward-fast" data="seek_forward_fast"><i class="fa fa-fast-forward"></i></div>       
-      </div>
-      <div class="main">
-        <div class="subtitles action" data="subtitles">SUBS</div>
-        <div class="stop">STOP</div>
-        <div class="button action backward" data="seek_back"><i class="fa fa-backward"></i></div>  
-        <div class="button action forward" data="seek_forward"><i class="fa fa-forward"></i></div>
-        <div class="button action play" data="pause" id="action"><i class="fa fa-pause"></i></div>
-      </div>
-      <div class="volume">
-        <div class="button action down volume-down" data="volume_down"><i class="fa fa-volume-down"></i></div>
-        <div class="button action up volume-up" data="volume_up"><i class="fa fa-volume-up"></i></div>
+    <div class="container-fluid" id="content">
+      <div id="app">
+        {{message}}
       </div>
     </div>
-
-    <script type="text/javascript">
-      var playerStatus = null;
-
-      function command(name) {
-        $.getJSON("/command/" + name, {}, function(resp) {
-          console.log(resp);
-        });
-      }
-
-      function play(path) {
-        $.getJSON("/play", { file: path }, function(resp) {
-          if (resp.success) {
-            updateStatus();
-          }
-        });
-      }
-
-      function browse(path) {
-        $("ul").html("");
-
-        path = path || "";
-
-        $.getJSON("/browse", { path: path }, function(resp) {
-          // Add return back element if we under a parent directory
-          if (path != "") {
-            items     = path.split("/"); items.pop();
-            back_path = items.join("/");
-
-            $("<li><a href='#' data='" + back_path + "'><i class='fa fa-level-up'></i> back</a></li>").appendTo(".browse ul");
-          }
-
-          for (i in resp) {
-            file = resp[i];
-            name = file.filename;
-
-            if (path != "") {
-              name = path + "/" + name;
-            }
-
-            // Either a file or a directory
-            var data_type = file.directory ? "dir" : "file";
-            var css_class = file.directory ? "fa-folder" : "fa-film";
-            var href = "#";
-
-            if (data_type == "file") {
-              href = "/serve?file=" + name;
-            }
-
-            $("<li><a href='" + href + "' data-type='" + data_type + "' data='" + name + "'><i class='fa " + css_class + "'></i> " + file.filename + "</a></li>").appendTo(".browse ul");
-          }
-        });
-      }
-
-      function updateStatus() {
-        $.getJSON("/status", {}, function(resp) {
-          playerStatus = resp;
-
-          if (resp.running) {
-            $(".browse").hide();
-            $(".controls").show();
-          }
-          else {
-            $(".browse").show();
-            $(".controls").hide();
-            browse();
-          }
-        });
-      }
-
-      $(function() {
-        updateStatus();
-
-        $(".stop").on("click", function() {
-          command("stop");
-          window.location.reload();
-        });
-
-        $(".action").on("click", function() {
-          command($(this).attr("data"));
-          $(this).removeClass("active");
-
-          if ($(this).hasClass("play")) {
-            el = $(this).find("i");
-
-            if (el.hasClass("fa-play")) {
-              el.removeClass("fa-play").addClass("fa-pause");
-            }
-            else {
-              el.removeClass("fa-pause").addClass("fa-play");
-            }
-          }
-        });
-
-        $(".button").on("touchstart mousedown", function() {
-          $(this).addClass("active");
-        });
-
-        $(".button").on("touchend touchcancel mouseup", function() {
-          $(this).removeClass("active");
-        });
-
-        $("body").on("click", "a", function(e) {
-          e.preventDefault();
-
-          var path = $(this).attr("data");
-          var type = $(this).attr("data-type");
-
-          if (type == "file") {
-            play(path);
-          }
-          else {
-            browse(path);
-          }
-        });
-      });
-    </script>
+    <script src="/static/js/main.js" ></script>
   </body>
 </html>
