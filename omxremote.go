@@ -218,6 +218,37 @@ func httpIndex(c *gin.Context) {
 	c.Data(200, "text/html; charset=utf-8", data)
 }
 
+func httpServeResources(c *gin.Context) {
+	path := c.Param("path")
+
+	if path == "" {
+		c.String(404, "")
+		return
+	}
+
+	data, err := Asset("static/" + path)
+	if err != nil {
+		c.String(400, err.Error())
+	}
+
+	var cType string
+	if strings.HasSuffix(path, ".css") {
+		cType = "text/css"
+	} else if strings.HasSuffix(path, ".html") {
+		cType = "text/html"
+	} else if strings.HasSuffix(path, ".js") {
+		cType = "application/javascript"
+	} else if strings.HasSuffix(path, ".png") {
+		cType = "image/png"
+	} else if strings.HasSuffix(path, ".svg") {
+		cType = "image/svg+xml"
+	} else {
+		cType = "text/plain"
+	}
+
+	c.Data(200, cType+"; charset=utf-8", data)
+}
+
 // Retrieve information about the host: uptime, storage, etc
 func httpHost(c *gin.Context) {
 	output := map[string]string{}
@@ -317,9 +348,9 @@ func main() {
 	}
 
 	// Check if player is installed
-	if omxDetect() != nil {
+	/*if omxDetect() != nil {
 		terminate("omxplayer is not installed", 1)
-	}
+	}*/ //disable for debug
 
 	// Make sure nothing is running
 	omxCleanup()
@@ -351,6 +382,7 @@ func main() {
 		router.GET("/", httpIndex)
 	}
 
+	router.GET("/static/:path", httpServeResources)
 	router.GET("/status", httpStatus)
 	router.GET("/browse", httpBrowse)
 	router.GET("/info", httpInfo)
