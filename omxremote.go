@@ -226,7 +226,7 @@ func httpServeResources(c *gin.Context) {
 		return
 	}
 
-	data, err := Asset("static/" + path)
+	data, err := Asset(filepath.Join("static/" + path))
 	if err != nil {
 		c.String(400, err.Error())
 	}
@@ -382,7 +382,7 @@ func main() {
 		router.GET("/", httpIndex)
 	}
 
-	router.GET("/static/:path", httpServeResources)
+	router.GET("/static/*path", httpServeResources)
 	router.GET("/status", httpStatus)
 	router.GET("/browse", httpBrowse)
 	router.GET("/info", httpInfo)
