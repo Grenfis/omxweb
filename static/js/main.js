@@ -61,6 +61,7 @@ var app = new Vue({
                 console.log(error)
             })
         },
+        
         get_files: function(path) {
             return fetch('/browse?path=' + (path?path:''))
             .then((response) => {
@@ -70,6 +71,7 @@ var app = new Vue({
                 throw new Error('Can not get file list from server')
             }).then((json) => {
                 this.files = json
+                //directories first
                 this.files.sort(function(f1, f2) {
                     if (f1.directory && !f2.directory) {
                         return -1
@@ -80,12 +82,13 @@ var app = new Vue({
                     }
                 })
                 if (path) {
+                    //add parent link
                     items = path.split('/')
                     items.pop()
                     parent = items.join('/')
                     this.files.unshift({
                         filename: '..',
-                        parent: parent, //add this only for save parent path
+                        parent: parent,
                         directory: true
                     })
                 }
