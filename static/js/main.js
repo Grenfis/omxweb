@@ -19,7 +19,25 @@ var brwsr =  {
                 else{ //navigate to parent dir
                     this.f_gfiles(this.items[0].parent)
                 }
+            }else{
+                this.play_file(filename)
             }
+        },
+        
+        play_file: function(file) {
+            fetch('/play?file='+file)
+            .then((response) => {
+                if(response.ok) {
+                    return response.json()
+                }
+                throw new Error('Can not play file')
+            }).then((json) => {
+                if(!json.success) {
+                    throw new Error('The launch of the video failed')
+                }
+            }).catch((err) => {
+                console.log(err)
+            })
         }
     }
 }
@@ -44,7 +62,7 @@ var app = new Vue({
         "c_controller": cntrlr
     },
     methods: {
-        getStatus: function() {
+        get_status: function() {
             return fetch('/status')
             .then((response) => {
                 if(response.ok) {
@@ -61,7 +79,7 @@ var app = new Vue({
                 console.log(error)
             })
         },
-        
+
         get_files: function(path) {
             return fetch('/browse?path=' + (path?path:''))
             .then((response) => {
@@ -99,7 +117,7 @@ var app = new Vue({
     },
 
     created: function() {
-        this.getStatus()
+        this.get_status()
         .then(() => {
             if (this.running) {
                 //todo: controller
