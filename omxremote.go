@@ -348,9 +348,9 @@ func main() {
 	}
 
 	// Check if player is installed
-	/*if omxDetect() != nil {
+	if omxDetect() != nil {
 		terminate("omxplayer is not installed", 1)
-	}*/ //disable for debug
+	}
 
 	// Make sure nothing is running
 	omxCleanup()
