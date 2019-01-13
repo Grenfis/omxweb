@@ -33,10 +33,11 @@
       </nav>
 
       <div class="container">
-        <c_browser v-show='!running' v-bind:items="files" v-bind:f_gfiles="get_files"></c_browser>
-        <c_controller v-show='running' msg="asdadad111"></c_controller>
+        <div class="row">
+          <c_browser v-show='!status.running' v-bind:get_status="get_status" v-bind:cur_path="cur_path" v-bind:items="files" v-bind:f_gfiles="get_files"></c_browser>
+          <c_controller v-show='status.running' v-bind:get_status="get_status" v-bind:status='status'></c_controller>
+        </div> 
       </div>
-
     </div>
     <script src="/static/js/main.js" ></script>
   </body>
