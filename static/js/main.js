@@ -1,16 +1,18 @@
 var brwsr =  {
     template: `
-    <div class="list-group">
-        <a 
-            v-for="item in items" 
-            class="list-group-item list-group-item-action" 
-            v-bind:class="{'list-group-item-secondary':item.directory}" 
-            v-on:click="click(item.directory, item.filename)"
-        >
-            {{item.filename}}
-        </a>
+    <div class="col-12">
+        <div class="list-group">
+            <a 
+                v-for="item in items" 
+                class="list-group-item list-group-item-action" 
+                v-bind:class="{'list-group-item-secondary':item.directory}" 
+                v-on:click="click(item.directory, item.filename)"
+            >
+                {{item.filename}}
+            </a>
+        </div>
     </div>`,
-    props: ['items', 'f_gfiles', 'cur_path', 'get_status'],
+    props: ['items', 'f_gfiles', 'cur_path'],
     methods: {
         click: function(dir, filename) {
             if (dir) {
@@ -40,7 +42,6 @@ var brwsr =  {
                 if(!json.success) {
                     throw new Error('The launch of the video failed')
                 }
-                this.get_status()
             }).catch((err) => {
                 console.log(err)
             })
@@ -56,6 +57,11 @@ var cntrlr = {
                 <div class="text-info" style="text-align: center;">{{status.name}}</div>
                 <div style="text-align: center;"><small>{{status.file}}</small></div>
             </div>
+        </div>
+        <div class="row">
+            <div class="col-4">00:00:00</div>
+            <div class="col-4" style="text-align: center;">{{status.position}}</div>
+            <div class="col-4" style="text-align: right;">{{status.duration}}</div>
         </div>
         <div class="row">
             <div class="col p-3">
@@ -132,7 +138,7 @@ var app = new Vue({
         cur_path: '',
         statUpdTimer: '',
         files: [],
-        refreshDur: 5000
+        refreshDur: 2000
     },
     components: {
         "c_browser": brwsr,
@@ -201,9 +207,7 @@ var app = new Vue({
     created: function() {
         this.get_status()
         .then(() => {
-            if (this.running) {
-                //todo: controller
-            }else{
+            if (!this.running) {
                 this.get_files()
             }
         })
