@@ -353,7 +353,10 @@ func main() {
 	}
 
 	// Make sure nothing is running
-	omxCleanup()
+	debug := os.Getenv("DEBUG")
+	if debug != "1" {
+		omxCleanup()
+	}
 
 	// Start a remote command listener
 	go omxListen()
@@ -365,7 +368,9 @@ func main() {
 	}
 
 	// Disable debugging mode
-	gin.SetMode("release")
+	if debug != "1" {
+		gin.SetMode("release")
+	}
 
 	// Setup HTTP server
 	router := gin.Default()
