@@ -1,6 +1,4 @@
-var gmenu = httpVueLoader('./global_menu.vue')
-var brwsr = httpVueLoader('./browser.vue')
-var cntrlr = httpVueLoader('./control_panel.vue')
+Vue.use(httpVueLoader)
 
 var app = new Vue({
     el: '#app',
@@ -18,9 +16,9 @@ var app = new Vue({
         refreshDur: 2000
     },
     components: {
-        "c_browser": brwsr,
-        "c_controller": cntrlr,
-        "c_gmenu": gmenu
+        "c_browser": 'url:/static/js/browser.vue',
+        "c_controller": 'url:/static/js/control_panel.vue',
+        "c_gmenu": 'url:/static/js/global_menu.vue'
     },
     methods: {
         get_status: function() {

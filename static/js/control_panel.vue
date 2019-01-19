@@ -38,7 +38,7 @@
     </div>
 </template>
 <script>
-export default {
+module.exports = {
     data: function() {
         return {
             cur_pos: 0

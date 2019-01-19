@@ -15,7 +15,7 @@
     </nav>
 </template>
 <script>
-export default {
+module.exports = {
     data: function() {
         return {
             info: ''

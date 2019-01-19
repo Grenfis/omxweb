@@ -13,7 +13,7 @@
     </div>
 </template>
 <script>
-export default {
+module.exports = {
     props: ['items', 'f_gfiles', 'cur_path'],
     methods: {
         click: function(dir, filename) {
