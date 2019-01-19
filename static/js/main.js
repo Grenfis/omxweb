@@ -9,10 +9,7 @@ var gmenu = {
         <div class="collapse navbar-collapse" id="navbarColor02">
             <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Features</a>
+                <a class="nav-link" href="#" v-on:click="reboot()">Reboot</a>
             </li>
             </ul>
         </div>
@@ -21,6 +18,19 @@ var gmenu = {
     data: function() {
         return {
             info: ''
+        }
+    },
+    methods: {
+        reboot: function() {
+            fetch('/reboot')
+            .then((response) => {
+                if(response.ok) {
+                    return
+                }
+                throw new Error('Can\'t get host info')
+            }).catch((err) => {
+                console.log(err)
+            })
         }
     },
     created: function() {

@@ -388,10 +388,10 @@ func main() {
 	router.GET("/info", httpInfo)
 	router.GET("/play", httpPlay)
 	router.GET("/serve", httpServe)
-	router.POST("/remove", httpRemoveFile)
+	router.GET("/remove", httpRemoveFile)
 	router.GET("/command/:command", httpCommand)
 	router.GET("/host", httpHost)
-	router.POST("/reboot", httpReboot)
+	router.GET("/reboot", httpReboot)
 
 	port := os.Getenv("PORT")
 	if port == "" {
