@@ -193,15 +193,6 @@ func httpRemoveFile(c *gin.Context) {
 }
 
 func httpStatus(c *gin.Context) {
-	if os.Getenv("STATUS_DBG") == "1" {
-		c.String(200, `{"running":true,
-			"file":"/media/pi/V/test_video.avi",
-			"name":"Test video",
-			"position":"00:09:02",
-			"duration":"00:22:07"}`)
-		return
-	}
-
 	resp := StatusResponse{
 		Running: omxIsActive(),
 		File:    CurrentFile,
