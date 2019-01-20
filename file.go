@@ -24,6 +24,11 @@ func scanPath(path string) []FileEntry {
 	}
 
 	for _, file := range files {
+		//skip hidden files
+		if strings.HasPrefix(file.Name(), ".") {
+			continue
+		}
+
 		entry := FileEntry{
 			Filename: file.Name(),
 			IsDir:    file.IsDir(),
