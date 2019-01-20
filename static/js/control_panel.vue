@@ -19,8 +19,8 @@
             </div>
         </div>
         <div class="row">
-            <div class="col"></div>
             <div class="col">
+                <!--
                 <div class="btn-group" role="group" aria-label="">
                     <button type="button" class="btn btn-secondary" v-on:click="control('stop')">STOP</button>
                     <button type="button" class="btn btn-secondary" v-on:click="control('seek_back_fast')"><=</button>
@@ -32,8 +32,45 @@
                     <button type="button" class="btn btn-secondary" v-on:click="control('volume_up')">+</button>
                     <button type="button" class="btn btn-secondary" v-on:click="control('subtitles')">SUBS</button>
                 </div>
+                -->
+                <div class="row">
+                    <div class="col-md-1 col-lg-1"></div>
+                    <div v-on:click="control('stop')" class="col ctrl_btn border-top border-left pt-3 pb-3">
+                        STOP
+                    </div>
+                    <div v-on:click="control('volume_up')" class="col ctrl_btn border-top border-left pt-3 pb-3">
+                        +
+                    </div>
+                    <div v-on:click="control('volume_down')" class="col ctrl_btn border-top border-left pt-3 pb-3">
+                        -
+                    </div>
+                    <div v-on:click="control('subtitles')" class="col ctrl_btn border-top border-left border-right pt-3 pb-3">
+                        SUBS
+                    </div>
+                    <div class="col-md-1 col-lg-1"></div>
+                    <div class="w-100"></div>
+                    <div class="col-md-1 col-lg-1"></div>
+                    <div v-on:click="control('seek_back_fast')" class="col ctrl_btn border-top border-left pt-3 pb-3">
+                        <=
+                    </div>
+                    <div v-on:click="control('seek_back')" class="col ctrl_btn border-top border-left pt-3 pb-3">
+                        <
+                    </div>
+                    <div v-on:click="control('seek_forward')" class="col ctrl_btn border-top border-left pt-3 pb-3">
+                        >
+                    </div>
+                    <div v-on:click="control('seek_forward_fast')" class="col ctrl_btn border-top border-left border-right pt-3 pb-3">
+                        =>
+                    </div>
+                    <div class="col-md-1 col-lg-1"></div>
+                    <div class="w-100"></div>
+                    <div class="col-md-1 col-lg-1"></div>
+                    <div v-on:click="control('pause')" class="col ctrl_btn border-top border-bottom border-right border-left pt-3 pb-3">
+                        PLAY
+                    </div>
+                    <div class="col-md-1 col-lg-1"></div>
+                </div>
             </div>
-            <div class="col"></div>
         </div>
     </div>
 </template>
@@ -75,3 +112,12 @@ module.exports = {
     }
 }
 </script>
+<style>
+div.ctrl_btn{
+    text-align: center;
+}
+
+div.ctrl_btn:hover {
+    background-color: #f8f9fa;
+}
+</style>
