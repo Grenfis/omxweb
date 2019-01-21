@@ -1,22 +1,15 @@
-# omxremote
+# omxweb
 
 Web interface and API for Raspberry Pi Omxplayer.
 
 ## Overview
 
-[Omxplayer](http://elinux.org/Omxplayer) is made specifically for Raspberry Pi (RPi) and
-is one of the most simpliest video players you can find. Although there are many others,
-including [raspbmc](http://www.raspbmc.com/) that work as a full-blown media center,
-omxplayer is a perfect fit for systems that do not have any GUI or peripherals and running stock 
-[Rasbpian](http://www.raspbian.org/) OS. However, omxplayer was designed to be
-controlled via keyboard shortcuts and does not provide any way to control it remotely.
-
-Omxremote project is an attempt to build a web frontend and simple API to control 
-video playback on a remote RPi device. Its built in Go, which has capability to 
-cross-compile source code for ARM and as a result provides a single binary with 
-no external dependencies to be downloaded and installed on your Pi.
-
-[Screenshot](screenshots/omxremote.png)
+This is fork of [omxremote](https://github.com/sosedoff/omxremote) project. 
+Features:
+* New WebGUI developed with VueJS
+  * update status every 5s;
+  * progressbar for display watching status.
+* Bug Fix.
 
 ## Requirements
 
@@ -59,6 +52,12 @@ In cases if you dont have Make available on your system, you can execute the fol
 ```
 go get
 GOOS=linux GOARCH=arm go build
+```
+
+For debugging proposes:
+
+```
+export DEBUG=1
 ```
 
 ## Usage
