@@ -15,6 +15,7 @@ import (
 	"sync"
 
 	"github.com/gin-gonic/gin"
+	"github.com/tidwall/buntdb"
 )
 
 const VERSION = "0.2.0"
@@ -70,6 +71,7 @@ var (
 	Zeroconf    bool           // Enable Zeroconf discovery
 	Frontend    bool           // Serve frontend app
 	stream      *Stream        // Current stream
+	db          *buntdb.DB     // Settings database
 )
 
 func httpBrowse(c *gin.Context) {
@@ -337,6 +339,13 @@ func init() {
 }
 
 func main() {
+	// Init database
+	db, err := buntdb.Open("/var/lib/omxremote/settings.db")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
 	// Expand media path if needed
 	MediaPath = strings.Replace(MediaPath, "~", os.Getenv("HOME"), 1)
 
