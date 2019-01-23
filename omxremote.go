@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
@@ -13,6 +14,7 @@ import (
 	"regexp"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/tidwall/buntdb"
@@ -36,6 +38,12 @@ type StatusResponse struct {
 type FileEntry struct {
 	Filename string `json:"filename"`
 	IsDir    bool   `json:"directory"`
+}
+
+type FilmData struct {
+	Watched  bool      `json:"watched"`
+	Date     time.Time `json:"date"`
+	Position string    `json:"position"`
 }
 
 var (
@@ -147,6 +155,13 @@ func httpPlay(c *gin.Context) {
 	}
 
 	go omxPlay(file)
+
+	db.Update(func(tx *buntdb.Tx) error {
+		fd := FilmData{Watched: true, Date: time.Now(), Position: ""}
+		fdStr, _ := json.Marshal(&fd)
+		tx.Set(file, string(fdStr), nil)
+		return nil
+	})
 
 	c.JSON(200, Response{true, "OK"})
 }
