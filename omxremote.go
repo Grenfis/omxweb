@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -38,10 +39,10 @@ type StatusResponse struct {
 type FileEntry struct {
 	Filename string `json:"filename"`
 	IsDir    bool   `json:"directory"`
+	Watched  bool   `json:"watched"`
 }
 
 type FilmData struct {
-	Watched  bool      `json:"watched"`
 	Date     time.Time `json:"date"`
 	Position string    `json:"position"`
 }
@@ -79,6 +80,7 @@ var (
 	Zeroconf    bool           // Enable Zeroconf discovery
 	Frontend    bool           // Serve frontend app
 	stream      *Stream        // Current stream
+	debug       string         // Debug flag
 	db          *buntdb.DB     // Settings database
 )
 
@@ -91,7 +93,19 @@ func httpBrowse(c *gin.Context) {
 		path = MediaPath
 	}
 
-	c.JSON(200, scanPath(path))
+	cont := scanPath(path)
+	db.View(func(tx *buntdb.Tx) error {
+		tx.Ascend("", func(key, value string) bool {
+			for i, file := range cont {
+				if key == file.Filename {
+					cont[i].Watched = true
+				}
+			}
+			return true
+		})
+		return nil
+	})
+	c.JSON(200, cont)
 }
 
 func httpCommand(c *gin.Context) {
@@ -154,12 +168,14 @@ func httpPlay(c *gin.Context) {
 		return
 	}
 
-	go omxPlay(file)
+	if debug != "1" {
+		go omxPlay(file)
+	}
 
 	db.Update(func(tx *buntdb.Tx) error {
-		fd := FilmData{Watched: true, Date: time.Now(), Position: ""}
+		fd := FilmData{Date: time.Now(), Position: ""}
 		fdStr, _ := json.Marshal(&fd)
-		tx.Set(file, string(fdStr), nil)
+		tx.Set(path.Base(file), string(fdStr), nil)
 		return nil
 	})
 
@@ -354,12 +370,19 @@ func init() {
 }
 
 func main() {
+	debug = os.Getenv("DEBUG")
 	// Init database
-	db, err := buntdb.Open("/var/lib/omxremote/settings.db")
+	dbPath := "/var/lib/omxremote/settings.db"
+	if debug == "1" {
+		dbPath = "/var/lib/omxremote/settings_test.db"
+	}
+
+	dbTmp, err := buntdb.Open(dbPath)
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer db.Close()
+	defer dbTmp.Close()
+	db = dbTmp
 
 	// Expand media path if needed
 	MediaPath = strings.Replace(MediaPath, "~", os.Getenv("HOME"), 1)
@@ -377,7 +400,6 @@ func main() {
 	}
 
 	// Make sure nothing is running
-	debug := os.Getenv("DEBUG")
 	if debug != "1" {
 		omxCleanup()
 	}
