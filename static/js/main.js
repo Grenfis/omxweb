@@ -29,7 +29,7 @@ var app = new Vue({
                 }
                 throw new Error('Can not get status from server')
             }).then((json) => {
-                this.status = json
+                this.setStatus(json)
             }).catch((error) => {
                 console.log(error)
             })
@@ -69,10 +69,8 @@ var app = new Vue({
             }).catch((error) => {
                 console.log(error)
             })
-        }
-    },
-    watch: {
-        status: function(stat) {
+        },
+        setStatus: function(stat) {
             if (!stat.running && this.status.running) {
                 this.get_files()
             }
