@@ -36,7 +36,18 @@ var app = new Vue({
         },
 
         get_files: function(path) {
-            return fetch('/browse?path=' + (path?path:''))
+            parent = '-1'
+            try{
+                p = this.files[0].parent
+                parent = p
+            }catch(e){
+            }
+            p = ''
+            if (parent != path) {
+                p = this.cur_path + '/'
+            }
+
+            return fetch('/browse?path=' + p + (path?path:''))
             .then((response) => {
                 if(response.ok) {
                     return response.json()
@@ -55,16 +66,24 @@ var app = new Vue({
                     }
                 })
                 if (path) {
-                    //add parent link
-                    items = path.split('/')
-                    items.pop()
-                    parent = items.join('/')
-                    this.cur_path = path
+                    pth = ''
+                    if (parent == path){
+                        this.cur_path = path
+                        pth = path.split('/')
+                        pth.pop()
+                        pth = pth.join('/')
+                    }else{
+                        pth = this.cur_path
+                        this.cur_path += '/' + path
+                    }
+
                     this.files.unshift({
-                        filename: '..',
-                        parent: parent,
-                        directory: true
+                        'filename': '..',
+                        'parent': pth,
+                        'directory': true
                     })
+                }else{
+                    this.cur_path = ''
                 }
             }).catch((error) => {
                 console.log(error)
