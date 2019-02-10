@@ -38,6 +38,7 @@ type StatusResponse struct {
 
 type FileEntry struct {
 	Filename string `json:"filename"`
+	Base     string `json:"base"`
 	IsDir    bool   `json:"directory"`
 	Watched  bool   `json:"watched"`
 }
@@ -86,6 +87,7 @@ var (
 
 func httpBrowse(c *gin.Context) {
 	path := c.Request.FormValue("path")
+	spath := path
 
 	if path != "" {
 		path = fmt.Sprintf("%s/%s", MediaPath, path)
@@ -100,6 +102,7 @@ func httpBrowse(c *gin.Context) {
 				if key == file.Filename {
 					cont[i].Watched = true
 				}
+				cont[i].Base = spath
 			}
 			return true
 		})
