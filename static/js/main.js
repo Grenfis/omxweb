@@ -10,7 +10,7 @@ var app = new Vue({
             position: '',
             duration: ''
         },
-        cur_path: '',
+        bpath: [],
         statUpdTimer: '',
         files: [],
         refreshDur: 2000
@@ -35,19 +35,8 @@ var app = new Vue({
             })
         },
 
-        get_files: function(path) {
-            parent = '-1'
-            try{
-                p = this.files[0].parent
-                parent = p
-            }catch(e){
-            }
-            p = ''
-            if (parent != path) {
-                p = this.cur_path + '/'
-            }
-
-            return fetch('/browse?path=' + p + (path?path:''))
+        get_files: function() {
+            return fetch('/browse?path=' + this.bpath[0])
             .then((response) => {
                 if(response.ok) {
                     return response.json()
@@ -65,25 +54,11 @@ var app = new Vue({
                         return 0
                     }
                 })
-                if (path) {
-                    pth = ''
-                    if (parent == path){
-                        this.cur_path = path
-                        pth = path.split('/')
-                        pth.pop()
-                        pth = pth.join('/')
-                    }else{
-                        pth = this.cur_path
-                        this.cur_path += '/' + path
-                    }
-
+                if (this.bpath[0] != '') {
                     this.files.unshift({
                         'filename': '..',
-                        'parent': pth,
                         'directory': true
                     })
-                }else{
-                    this.cur_path = ''
                 }
             }).catch((error) => {
                 console.log(error)
@@ -91,13 +66,21 @@ var app = new Vue({
         },
         setStatus: function(stat) {
             if (!stat.running && this.status.running) {
-                this.get_files()
+                this.get_files(this.bpath[0])
             }
             this.status = stat
+        },
+        // for navigation to parent or child
+        go_down: function(path) {
+            this.bpath.unshift(path)
+        },
+        go_up: function() {
+            this.bpath.shift()
         }
     },
 
     created: function() {
+        this.bpath.push('')
         this.get_status()
         .then(() => {
             if (!this.running) {

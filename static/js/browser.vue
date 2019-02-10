@@ -5,7 +5,7 @@
                 v-for="item in items" 
                 class="list-group-item list-group-item-action" 
                 v-bind:class="{'list-group-item-secondary':item.directory, 'text-primary':item.watched}" 
-                v-on:click="click(item.directory, item.filename)"
+                v-on:click="click(item.directory, item.filename, item.base)"
             >
                 {{item.filename}}
             </a>
@@ -14,26 +14,24 @@
 </template>
 <script>
 module.exports = {
-    props: ['items', 'f_gfiles', 'cur_path'],
+    props: ['items', 'f_gfiles', 'go_down', 'go_up'],
     methods: {
-        click: function(dir, filename) {
+        click: function(dir, filename, base) {
             if (dir) {
-                if (filename != '..')
-                    this.f_gfiles(filename)
-                else{ //navigate to parent dir
-                    this.f_gfiles(this.items[0].parent)
+                if (filename != '..'){
+                    this.go_down(base + '/' + filename)
+                    this.f_gfiles()
+                }else{ //navigate to parent dir
+                    this.go_up()
+                    this.f_gfiles()
                 }
             }else{
-                this.play_file(filename)
+                this.play_file(filename, base)
             }
         },
         
-        play_file: function(file) {
-            path = ''
-            if (this.cur_path) {
-                path = this.cur_path + '/'
-            }
-            path = '/play?file='+path+file
+        play_file: function(file, base) {
+            path = '/play?file=/'+base+'/'+file
             fetch(path)
             .then((response) => {
                 if(response.ok) {
