@@ -5,7 +5,7 @@
                 v-for="item in items" 
                 class="list-group-item list-group-item-action" 
                 v-bind:class="{'list-group-item-secondary':item.directory, 'text-primary':item.watched}" 
-                v-on:click="click(item.directory, item.filename, item.base)"
+                v-on:click="click(item.directory, encodeURIComponent(item.filename), item.base)"
             >
                 {{item.filename}}
             </a>
