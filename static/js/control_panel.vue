@@ -1,5 +1,5 @@
 <template>
-    <div class="col-12">
+    <div class="col-12" id="control_panel">
         <div class="row">
             <div class="col p-3">
                 <div class="text-info" style="text-align: center;">{{status.name}}</div>
@@ -20,19 +20,6 @@
         </div>
         <div class="row">
             <div class="col">
-                <!--
-                <div class="btn-group" role="group" aria-label="">
-                    <button type="button" class="btn btn-secondary" v-on:click="control('stop')">STOP</button>
-                    <button type="button" class="btn btn-secondary" v-on:click="control('seek_back_fast')"><=</button>
-                    <button type="button" class="btn btn-secondary" v-on:click="control('seek_back')"><</button>
-                    <button type="button" class="btn btn-secondary" v-on:click="control('pause')">PLAY</button>
-                    <button type="button" class="btn btn-secondary" v-on:click="control('seek_forward')">></button>
-                    <button type="button" class="btn btn-secondary" v-on:click="control('seek_forward_fast')">=></button>
-                    <button type="button" class="btn btn-secondary" v-on:click="control('volume_down')">-</button>
-                    <button type="button" class="btn btn-secondary" v-on:click="control('volume_up')">+</button>
-                    <button type="button" class="btn btn-secondary" v-on:click="control('subtitles')">SUBS</button>
-                </div>
-                -->
                 <div class="row">
                     <div class="col-md-1 col-lg-1"></div>
                     <div v-on:click="control('stop')" class="col ctrl_btn border-top border-left pt-3 pb-3">
