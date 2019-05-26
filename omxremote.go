@@ -103,12 +103,14 @@ func httpBrowse(c *gin.Context) {
 				if key == file.Filename {
 					cont[i].Watched = true
 				}
-				cont[i].Base = spath
 			}
 			return true
 		})
 		return nil
 	})
+	for i, _ := range cont {
+		cont[i].Base = spath
+	}
 	c.JSON(200, cont)
 }
 
