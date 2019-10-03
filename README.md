@@ -25,16 +25,6 @@ sudo apt-get install -y omxplayer
 
 No special permissions are required in order to play videos with `omxplayer` and `omxremote`.
 
-## Install
-
-Use [Github Releases](https://github.com/sosedoff/omxremote/releases)
-
-Or run the following snippet for quick install:
-
-```
-curl -s https://raw.githubusercontent.com/sosedoff/omxremote/master/install.sh | bash
-```
-
 ## Compile
 
 Compiling this project on RPi is a bit of a difficult task and does not necessarily makes
@@ -65,7 +55,7 @@ export DEBUG=1
 Options:
 
 ```
-Usage of omxremote:
+Usage of omxweb:
   -frontend
       Enable frontend applicaiton (default true)
   -media string
@@ -78,7 +68,7 @@ Usage of omxremote:
 To start omxremote, run the following command:
 
 ```
-omxremote -media /path/to/media
+omxweb -media /path/to/media
 ```
 
 By default server will start on port 8080 and listen on all network interfaces. You can
@@ -88,14 +78,14 @@ If you dont know the IP address of your RPi, run `ifconfig`.
 To enable service discovery using [Zeroconf](http://zeroconf.org/), use the flag:
 
 ```
-omxremote -media ./ -zeroconf
+omxweb -media ./ -zeroconf
 ```
 
 Omxremote advertises itself as `omxremote._tcp`
 
 To start the server on a specific interface or a given port, set the HOST and PORT variables.
 ```
-HOST=192.168.1.100 PORT=8081 omxremote -media ./
+HOST=192.168.1.100 PORT=8081 omxweb -media ./
 ```
 
 ### Running as daemon
@@ -103,14 +93,14 @@ HOST=192.168.1.100 PORT=8081 omxremote -media ./
 First, make sure you have copied the binary to `/usr/bin/`:
 
 ```
-sudo cp omxremote /usr/bin/
+sudo cp omxweb /usr/bin/
 ```
 
 To test if omxremote could be found in $PATH, run:
 
 ```
-which omxremote
-# => /usr/bin/omxremote
+which omxweb
+# => /usr/bin/omxweb
 ```
 
 Next step is to create a media directory:
@@ -124,27 +114,23 @@ section config files will also use that directory.
 
 #### init.d
 
-Use the following [example](https://github.com/sosedoff/omxremote/blob/master/config/omxremote.initd) to create a new init.d script:
-
 ```
-sudo nano /etc/init.d/omxremote
-sudo chmod +x /etc/init.d/omxremote
+sudo nano /etc/init.d/omxweb
+sudo chmod +x /etc/init.d/omxweb
 ```
 
 And then you can start the remote:
 
 ```
-sudo /etc/init.d/omxremote start
+sudo /etc/init.d/omxweb start
 ```
 
 #### systemd
 
-Use the following [example](https://github.com/sosedoff/omxremote/blob/master/config/omxremote.service) to create a new unit file:
-
 ```
-sudo nano /etc/systemd/system/omxremote.unit
-sudo systemctl enable omxremote
-sudo service omxremote start
+sudo nano /etc/systemd/system/omxweb.unit
+sudo systemctl enable omxweb
+sudo service omxweb start
 ```
 
 ### API
@@ -188,9 +174,3 @@ using omxremote:
 ```
 sudo apt-get install -y omxplayer
 ```
-
-## License
-
-The MIT License (MIT)
-
-Copyright (c) 2014-2018 Dan Sosedoff, dan.sosedoff@gmail.com
